@@ -26,10 +26,10 @@ from os.path import isfile
 from shutil import move
 import time
 
-from module.plugins.Hook import Hook
+from pyload.plugins.Addon import Addon, AddonHandler
+from pyload.plugins.Crypter import Package
 
-
-class HotFolder(Hook):
+class HotFolder(Addon):
     __name__ = "HotFolder"
     __version__ = "0.11"
     __description__ = """Observe folder and file for changes and add container and links"""
@@ -42,11 +42,10 @@ class HotFolder(Hook):
     __author_name__ = "RaNaN"
     __author_mail__ = "RaNaN@pyload.de"
 
-    def setup(self):
-        self.interval = 10
+    def init(self):
+        self.interval = 30
 
     def periodical(self):
-
         if not exists(join(self.getConfig("folder"), "finished")):
             makedirs(join(self.getConfig("folder"), "finished"))
 
@@ -81,3 +80,5 @@ class HotFolder(Hook):
 
             self.logInfo(_("Added %s from HotFolder") % f)
             self.core.api.addPackage(f, [newpath], 1)
+            PYLOAD.addPackage(package, result, paused=True)
+            
